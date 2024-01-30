@@ -1,0 +1,70 @@
+#include <iostream>
+
+struct Person {
+    // Assuming Person has some data members
+    std::string name;
+    int age;
+    // ... other members
+    Person* next;
+};
+
+struct Queue {
+    Person* front;
+    Person* rear;
+
+    Queue() : front(nullptr), rear(nullptr) {}
+
+    bool isEmpty() {
+        return front == nullptr;
+    }
+
+    void enqueue(Person* new_element) {
+        if (isEmpty()) {
+            front = rear = new_element;
+        } else {
+            rear->next = new_element;
+            rear = new_element;
+        }
+        new_element->next = nullptr;
+    }
+
+    // Dequeue operation
+    Person* dequeue() {
+        if (isEmpty()) {
+            std::cout << "Queue is empty. Cannot dequeue.\n";
+            return nullptr;
+        }
+        Person* dequeuedElement = front;
+        front = front->next;
+        if (front == nullptr) {
+            rear = nullptr; // If the queue becomes empty after dequeue
+        }
+        return dequeuedElement;
+    }
+
+    Person* getFront() {
+        return front;
+    }
+};
+
+int main() {
+    // Example usage
+    Queue myQueue;
+
+    // Creating persons for testing
+    Person* person1 = new Person{"Alice", 25};
+    Person* person2 = new Person{"Bob", 30};
+
+    myQueue.enqueue(person1);
+    myQueue.enqueue(person2);
+
+    std::cout << "Front of the queue: " << myQueue.getFront()->name << "\n";
+
+    Person* dequeuedPerson = myQueue.dequeue();
+    if (dequeuedPerson != nullptr) {
+        std::cout << "Dequeued person: " << dequeuedPerson->name << "\n";
+        delete dequeuedPerson; // Free memory after dequeueing
+    }
+
+    return 0;
+}
